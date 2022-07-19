@@ -1,0 +1,61 @@
+{
+  "id": "c62afd2a-0c0e-4cf4-82db-91856909fe97",
+  "uid": "expedita-error-sequi",
+  "type": "post",
+  "data": {
+    "title": "productize vertical metrics",
+    "subtitle": "monetize compelling markets",
+    "author": "engage killer content",
+    "banner": {
+      "dimensions": {
+        "width": 900,
+        "height": 500
+      },
+      "alt": "Placeholder image",
+      "copyright": null,
+      "url": "https://images.unsplash.com/photo-1471897488648-5eae4ac6686b?w=900&h=500&fit=crop"
+    },
+    "content": [
+      {
+        "heading": "synthesize clicks-and-mortar e-business",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Sint commodo veniam anim consequat in adipisicing laboris. Nulla esse dolore labore pariatur ut mollit ipsum labore sunt nulla Lorem adipisicing officia. In voluptate et est dolore exercitation reprehenderit sit.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": "unleash strategic web services",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Pariatur minim fugiat culpa magna anim.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": "envisioneer B2B e-business",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Sit excepteur voluptate ex qui sunt officia do est consequat excepteur.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": "strategize cross-platform infrastructures",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Cillum excepteur in et est qui magna fugiat. Aliqua quis in ipsum ut Lorem fugiat sunt cillum aliqua voluptate commodo veniam.",
+            "spans": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,4 +1,12 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { GetStaticProps } from 'next';
+import Link from 'next/link';
+import { useState } from 'react';
+import { FiCalendar, FiUser } from 'react-icons/fi';
+import { ptBR } from 'date-fns/locale';
+import format from 'date-fns';
+import Head from 'next/head';
+import Header from '../components/Header';
 
 import { getPrismicClient } from '../services/prismic';
 
@@ -24,13 +32,120 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export default function Home({ postsPagination }: HomeProps): JSX.Element {
+  const formattedPost = postsPagination.results.map(post => {
+    return {
+      ...post,
+      first_publication_date: new Date(
+        post.first_publication_date
+      ).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      }),
+    };
+  });
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient({});
-//   // const postsResponse = await prismic.getByType(TODO);
+  const [posts, setPosts] = useState<Post[]>(formattedPost);
+  const [nextPage, setNextPage] = useState(postsPagination.next_page);
+  const [currentPage, setCurrentPage] = useState(1);
 
-//   // TODO
-// };
+  async function handleNextPage(): Promise<void> {
+    if (currentPage !== 1 && nextPage === null) {
+      return;
+    }
+    const postsResults = await fetch(`${nextPage}`).then(response =>
+      response.json()
+    );
+    setNextPage(postsResults.next_page);
+    setCurrentPage(postsResults.page);
+
+    const newPosts = postsResults.results.map(post => {
+      return {
+        uid: post.uid,
+        first_publication_date: new Date(
+          post.first_publication_date
+        ).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }),
+        data: {
+          title: post.data.title,
+          author: post.data.author,
+          subtitle: post.data.subtitle,
+        },
+      };
+    });
+    setPosts([...posts, ...newPosts]);
+  }
+
+  return (
+    <>
+      <Head>
+        <title>Home | spacetraveling</title>
+      </Head>
+      <main className={commonStyles.container}>
+        <Header />
+        <div className={styles.posts}>
+          {posts.map(post => (
+            <Link href={`/post/${post.uid}`} key={post.uid}>
+              <a className={styles.post}>
+                <strong>{post.data.title}</strong>
+                <p>{post.data.subtitle}</p>
+                <ul>
+                  <li>
+                    <FiCalendar />
+                    {post.first_publication_date}
+                  </li>
+                  <li>
+                    <FiUser />
+                    {post.data.author}
+                  </li>
+                </ul>
+              </a>
+            </Link>
+          ))}
+          {nextPage && (
+            <button type="button" onClick={handleNextPage}>
+              Carregar mais posts
+            </button>
+          )}
+        </div>
+      </main>
+    </>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export async function getServerSideProps() {
+  const prismic = getPrismicClient();
+
+  const response = await prismic.getByType('post', {
+    pageSize: 1,
+  });
+
+  const posts = response.results.map(post => {
+    return {
+      uid: post.uid,
+      first_publication_date: post.first_publication_date,
+      data: {
+        title: post.data.title,
+        author: post.data.author,
+        subtitle: post.data.subtitle,
+      },
+    };
+  });
+
+  const postsPagination = {
+    next_page: response.next_page,
+    results: posts,
+  };
+
+  return {
+    props: {
+      postsPagination,
+    },
+  };
+}
